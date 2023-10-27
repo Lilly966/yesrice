@@ -17,6 +17,22 @@ super + Escape
 super + e
 	thunar
 
+# Screenshot Now
+Print
+	$HOME/.config/grugrice/screenshot.sh --now
+
+# Screenshot Select
+ctrl + Print
+	$HOME/.config/grugrice/screenshot.sh --sel
+
+# Screenshot in 10s
+alt + Print
+	$HOME/.config/grugrice/screenshot.sh --in10
+
+# Screenshot active window
+shift + Print
+	$HOME/.config/grugrice/screenshot.sh --active
+
 #
 # bspwm hotkeys
 #

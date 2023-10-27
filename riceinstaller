@@ -9,7 +9,7 @@ mkdir -p "$HOME/.config"
 
 deps=(bspwm sxhkd xorg-xrandr zsh zsh-autosuggestions zsh-syntax-highlighting thunar nano noto-fonts noto-fonts-cjk noto-fonts-extra \
 	xorg-xsetroot sddm feh btop alacritty wget zip unzip unrar polybar rofi ttf-jetbrains-mono-nerd ttf-jetbrains-mono lsd \
-	zsh-completions dunst clang cmake rust pacman-contrib xdg-user-dirs pamixer jq)
+	zsh-completions dunst clang cmake rust pacman-contrib xdg-user-dirs pamixer jq maim xclip)
 
 confs=(bspwm)
 
