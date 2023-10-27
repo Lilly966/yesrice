@@ -1,0 +1,29 @@
+#! /bin/sh
+
+#pgrep -x sxhkd > /dev/null || sxhkd &
+
+bspc monitor -d 1 2 3 4 5 6
+
+bspc config border_width        0
+bspc config window_gap          4
+
+bspc config split_ratio          0.52
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+bspc config top_padding 0
+bspc rule -a Gimp desktop='^8' state=floating follow=on
+bspc rule -a Chromium desktop='^2'
+bspc rule -a mplayer2 state=floating
+bspc rule -a Kupfer.py focus=on
+bspc rule -a Screenkey manage=off
+
+procs=("sxhkd" "picom" "polybar")
+
+for processes in "${procs[@]}"; do
+	pkill -9 -f "$processes"
+done
+picom --config "$HOME/.config/bspwm/picom.conf" &
+polybar -c "$HOME/.config/polybar/config.ini" &
+feh -z --no-fehbg --bg-fill --scale-down "$HOME/.config/bspwm/walls" &
+sxhkd -c "$HOME/.config/bspwm/sxhkdrc" &
+xsetroot -cursor_name left_ptr & 

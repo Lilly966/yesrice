@@ -1,0 +1,103 @@
+#!/bin/bash
+
+##### rims.
+
+GRUG_INFO=$(tput setaf 2)
+GRUG_CLR=$(tput sgr0)
+
+mkdir -p "$HOME/.config"
+
+deps=(bspwm sxhkd xorg-xrandr zsh zsh-autosuggestions zsh-syntax-highlighting thunar nano noto-fonts noto-fonts-cjk noto-fonts-extra \
+	xorg-xsetroot sddm feh btop alacritty wget zip unzip unrar polybar rofi ttf-jetbrains-mono-nerd ttf-jetbrains-mono lsd \
+	zsh-completions dunst clang cmake rust pacman-contrib xdg-user-dirs pamixer jq)
+
+confs=(bspwm)
+
+function is_already_installed() {
+	pacman -Qi "$1" &> /dev/null
+	return $?
+}
+
+function enable_sddm() {
+	sudo systemctl enable sddm.service
+}
+
+for pkg in "${deps[@]}"
+do
+	if ! is_already_installed "$pkg"; then
+		sudo pacman -S "$pkg" --noconfirm
+	else
+		printf '[%s%s%s] %s already installed, grug likes.\n' "$GRUG_INFO" "INFO" "$GRUG_CLR" "$pkg"
+		sleep 1
+	fi
+done
+
+if [[ $SHELL != "/usr/bin/zsh" ]]; then
+	printf "grug is changing to zsh!!!\n"
+	chsh -s /usr/bin/zsh
+else
+	printf 'grug has already setup zsh, is %sgood%s!' "$GRUG_INFO" "$GRUG_CLR"
+fi
+
+#for folder in "${confs[@]}"
+#do
+#	if [ -d "$HOME/.config/$folder" ]; then
+#		cp -r "config/$folder" "$HOME/.config/$folder"
+#		printf '[%s%s%s] copied %s' "$GRUG_INFO" "INFO" "$GRUG_CLR" "$folder"
+#	else
+#		printf "folder already exist, throwing rocks.\n"
+#	fi
+#done
+
+cp -r config/* "$HOME/.config/"
+
+enable_sddm
+
+function move_zshrc_config() {
+	cp additional/.zshrc ~/.zshrc
+}
+
+move_zshrc_config
+
+if [ ! -e "$HOME/.config/user-dirs.dirs" ]; then
+	xdg-user-dirs-update
+fi
+
+function install_deps() {
+	if command -v paru >/dev/null 2>&1; then
+		printf "grug happy, already installed.\n"
+	else
+		mkdir tmpparu
+		cd tmpparu
+		git clone https://aur.archlinux.org/paru-bin.git
+		cd paru-bin
+		makepkg -si --noconfirm
+		cd ../../
+		rm -rf tmpparu
+	fi
+
+	if command -v yay >/dev/null 2>&1; then
+		printf "grug happy, already installed."
+	else
+		mkdir tmpyay
+		cd tmpyay
+		git clone https://aur.archlinux.org/yay-bin.git
+		cd yay-bin
+		makepkg -si --noconfirm
+		cd ../../
+		rm -rf tmpyay
+	fi
+}
+
+install_deps
+
+yay_comps=(vencord-desktop-git picom-simpleanims-git cava)
+
+for pkg in "${yay_comps[@]}"
+do
+	if ! is_already_installed "$pkg"; then
+		yay -S $pkg --noconfirm
+	else
+		printf "%s already exists." "$pkg"
+	fi
+done
